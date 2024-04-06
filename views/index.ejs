@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<%- include ("partials/header.ejs") %> 
+
+<!-- <div class=" container">
+    <div class=" heading">Today's date </div>
+  <form id="toDoForm" class="inputForm" action="/submit" method="post">
+    <input type="text" id="newItem" name="trainingExcercise" placeholder="Training Excercise" autocomplete="off" required>
+    <button type="submit" name ="list" value="Today's date">+</button>
+
+    
+  </form>
+
+  <div class="itmes box">
+    <% if(locals.trainingExcercise && locals.trainingList){ %>
+    <% trainingList.forEach((traningExcerise) => { %>
+      <div class="item"><%= traningExcerise %></div>
+   <% })}; %>
+  </div>
+</div> -->
+
+
+
+    <main class="main">
+      <div class="trainingListH1">
+        <h1>Training list💪🏋️🏊</h1> <!--if Grocery button clicked res.render h1-->
+          <form id="toDoForm" action="/submit" method="post">
+            <input id="textInput" name="name" placeholder="Traning excerise">
+            <button id="plus"type="text" name="name" value="+">+</button>
+          </form>
+      </div>
+      <ul id="workOutList">
+          <li>
+            <!-- <div class="listItemContent">
+              <input type="checkbox">
+              <span>Grogu Curl</span>
+              <button class="editBtn">Edit</button>
+            </div> -->
+          </li>
+      </ul>
+    </main>
+
+
+<script src="index.js"></script>
+</body>
+
+
+<script>
+
+const form = document.querySelector('#toDoForm');
+const input = document.querySelector('input');
+const ul = document.querySelector('#workOutList'); 
+
+function createListItems(inputValue) {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.textContent = inputValue;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+
+    const editBtn = document.createElement('button');
+    editBtn.classList.add("liItemEditbtn");
+    editBtn.textContent = 'edit';
+
+
+    checkbox.addEventListener("change",(event) => {
+      if(checkbox.checked){
+        li.style.textDecoration = "line-through";
+      }else{
+        li.style.textDecoration = 'none';
+      }
+     
+
+    })
+    editBtn.addEventListener("click",()=>{
+      const inputOnFly = document.createElement("input");
+      inputOnFly.type = "text"; 
+      inputOnFly.value = span.textContent;  
+      //讓input 元素中顯示的文本與原始 span 元素的文本內容一致
+      inputOnFly.classList.add("editInput");
+
+        inputOnFly.addEventListener('blur', function() {
+          // 用blur 讓input元素自動更新值
+          span.textContent = inputOnFly.value;
+          // 再次将 span 元素替换回输入框
+          li.replaceChild(span, inputOnFly);
+        });
+        inputOnFly.addEventListener("keyup", function (event) {
+          if (event.keyCode === 13) {
+        // 如果按下 Enter 鍵，則觸發失焦事件
+          inputOnFly.blur();
+          }
+        });
+
+        li.replaceChild(inputOnFly, span);
+    // 将输入框聚焦，以便用户可以立即编辑
+        inputOnFly.focus();
+})
+
+    li.appendChild(checkbox);   // 將新創建的 span 元素添加為列表項目的子元素
+    li.appendChild(span);
+    li.appendChild(editBtn);
+    ul.appendChild(li);
+    return li; // stop the function and shows the value of li from above, format: return li
+}
+
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const inputValue = input.value;
+    if (inputValue === '') {
+        alert('Please enter an exercise');
+    } else {
+        const li = createListItems(inputValue);
+        ul.appendChild(li);
+        input.value = ''; // 清空輸入字段
+    }
+});
+
+
+// // front end change up things to Gorcery Mode
+// document.querySelector("#groceryBtn").addEventListener("click",(event)=>{
+//   document.querySelector("h1").textContent = "Grocery List";
+//   document.querySelector("input").setAttribute("placeholder", "Grocery to buy");
+//   event.preventDefault();
+// })
+
+
+
+
+
+</script>
+
+
+<%- include("partials/footer.ejs") %> 

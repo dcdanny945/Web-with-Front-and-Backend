@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<%- include ("partials/header.ejs") %> 
+
+<div id="wrapper">
+  <div class = "GroceryList">
+    
+      <h1>Grocery List🍳🍖🥦</h1> <!--if Grocery button clicked res.render h1-->
+        
+    
+    <main class="main">
+      <form id="toDoForm" action="/sumbit" method="post">
+        <input id="textInput" type="text" name="name" placeholder="Grocery Item">
+        <button id="plus" type="submit" name="submit" value="+">+</button>
+      </form>
+
+
+      <ul id="workOutList">
+        <li>
+          <!-- <div class="listItemContent">
+            <input type="checkbox">
+            <span>Grogu Curl</span>
+            <button class="editBtn">Edit</button>
+          </div> -->
+        </li>
+      </ul>
+    </main>
+  </div>
+</div>
+<script src="index.js"></script>
+</body>
+
+
+<script>
+
+const form = document.querySelector('#toDoForm');
+const input = document.querySelector('input');
+const ul = document.querySelector('#workOutList'); 
+
+function createListItems(inputValue) {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.textContent = inputValue;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'edit';
+
+
+    checkbox.addEventListener("change",(event) => {
+      if(checkbox.checked){
+        li.style.textDecoration = "line-through";
+      }else{
+        li.style.textDecoration = 'none';
+      }
+
+
+    })
+
+    editBtn.addEventListener("click",()=>{
+      const inputOnFly = document.createElement("input");
+      inputOnFly.type ="text";
+      inputOnFly.value = span.textContent;
+      // inputOnFly.classList.add("editInput");
+
+        inputOnFly.addEventListener("blur", ()=>{
+        //把滑鼠移開 or tab from input
+          span.textContent = inputOnFly.value;
+          li.replaceChild(span, inputOnFly);
+        });
+        inputOnFly.addEventListener("keyup", (event)=>{
+          if(event.keyCode === 13){
+            inputOnFly.blur();
+          }
+        });
+      li.replaceChild(inputOnFly, span); 
+      inputOnFly.focus();
+    })
+    
+
+    li.appendChild(checkbox);   // 將新創建的 span 元素添加為列表項目的子元素
+    li.appendChild(span);
+    li.appendChild(editBtn);
+   
+    return li; // stop the function and shows the value of li from above, format: return li
+}
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const inputValue = input.value;
+    if (inputValue === '') {
+        alert('Please enter a grocery item');
+    } else {
+        const li = createListItems(inputValue);
+        ul.appendChild(li);
+        input.value = ''; // 清空輸入字段
+    }
+});
+
+
+
+
+
+
+
+</script>
+
+
+<%- include("partials/footer.ejs") %> 
